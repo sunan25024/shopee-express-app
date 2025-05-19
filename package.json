@@ -1,0 +1,13 @@
+{
+  "name": "shopee-express-dashboard",
+  "version": "1.0.0",
+  "description": "Dashboard untuk manajemen kurir Shopee Express",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "firebase-admin": "^11.0.0"
+  }
+}

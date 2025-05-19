@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Shopee Express</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #F4E4BC;
+      margin: 0;
+      padding: 0;
+      color: #4A3728;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #D97706;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #8B4513;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-logo {
+      width: 60px;
+      height: auto;
+      margin-right: 20px;
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 500;
+      color: #FFF8E1;
+    }
+
+    .container {
+      padding: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: calc(100vh - 73px);
+    }
+
+    .section {
+      width: 100%;
+      max-width: 600px;
+      background: #FFF8E1;
+      padding: 24px;
+      border-radius: 8px;
+      border: 2px solid #8B4513;
+    }
+
+    .logo-container {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .logo {
+      width: 80px;
+      height: auto;
+    }
+
+    h2 {
+      color: #4A3728;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 500;
+      margin: 0 0 16px;
+    }
+
+    .delivery-item {
+      padding: 12px;
+      border-bottom: 1px solid #8B4513;
+      background: #F4E4BC;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    .delivery-item p {
+      margin: 4px 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <img src="https://iili.io/38FIi4R.png" alt="Logo" class="header-logo">
+      <div class="header-title">Dashboard Shopee Express</div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="section">
+      <div class="logo-container">
+        <img src="https://iili.io/38FIi4R.png" alt="Logo" class="logo">
+      </div>
+      <h2>Data Pengiriman Kurir</h2>
+      <div id="deliveryList"></div>
+    </div>
+  </div>
+
+  <script>
+    async function loadDashboard() {
+      try {
+        const response = await fetch('/api/deliveries');
+        const deliveries = await response.json();
+        const list = document.getElementById('deliveryList');
+        list.innerHTML = '';
+        deliveries.forEach(delivery => {
+          const div = document.createElement('div');
+          div.className = 'delivery-item';
+          div.innerHTML = `
+            <p><strong>Kurir:</strong> ${delivery.nama} (ID: ${delivery.idMitra})</p>
+            <p><strong>Total Paket:</strong> ${delivery.totalPaket}</p>
+            <p><strong>Terkirim:</strong> ${delivery.jumlahTerkirim}</p>
+            <p><strong>Pending:</strong> ${delivery.jumlahPending}</p>
+            <p><strong>Persentase:</strong> ${delivery.persentase}%</p>
+            <p><strong>Waktu:</strong> ${new Date(delivery.timestamp).toLocaleString()}</p>
+          `;
+          list.appendChild(div);
+        });
+      } catch (error) {
+        console.error('Gagal memuat data:', error);
+        document.getElementById('deliveryList').innerHTML = '<p>Gagal memuat data.</p>';
+      }
+    }
+
+    // Muat data saat halaman dibuka
+    window.onload = loadDashboard;
+
+    // Refresh data setiap 10 detik
+    setInterval(loadDashboard, 10000);
+  </script>
+</body>
+</html>
